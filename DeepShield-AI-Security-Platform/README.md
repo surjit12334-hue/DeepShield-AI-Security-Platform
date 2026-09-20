@@ -4,7 +4,41 @@
 
 DeepShield is a comprehensive AI-powered cybersecurity platform designed to detect potentially manipulated or AI-generated digital content such as images, videos, audio, and text.
 
-![DeepShield](https://img.shields.io/badge/DEEPSHIELD-Cybersecurity-blue) ![Python](https://img.shields.io/badge/Python-3.11+-green) ![React](https://img.shields.io/badge/React-18-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-teal) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![DeepShield](https://img.shields.io/badge/DEEPSHIELD-Cybersecurity-blue) ![Python](https://img.shields.io/badge/Python-3.13+-green) ![React](https://img.shields.io/badge/React-18-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-teal) ![SQLite](https://img.shields.io/badge/SQLite-demo-orange)
+
+---
+
+## Quick Deploy (GitHub)
+
+### 1. Clone
+```bash
+git clone https://github.com/surjit12334-hue/DeepShield-AI-Security-Platform.git
+cd DeepShield-AI-Security-Platform
+```
+
+### 2. Backend
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python run.py
+```
+Backend runs at **http://localhost:8000**
+
+### 3. Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Frontend runs at **http://localhost:3000**
+
+### 4. Demo Login
+| Field | Value |
+|-------|-------|
+| Email | `demo@deepshield.local` |
+| Password | `Demo@12345` |
 
 ---
 
@@ -19,203 +53,92 @@ DeepShield is a comprehensive AI-powered cybersecurity platform designed to dete
 - **Role-Based Access** - User and admin roles with JWT authentication
 - **Demo Mode** - Fully functional demo with simulated analysis results
 
+---
+
 ## Architecture
 
 ```
-deepshield/
-├── frontend/          # React + TypeScript + Tailwind CSS
-├── backend/           # Python + FastAPI + SQLAlchemy
-├── ml/                # AI detection modules (pluggable)
-├── database/          # Migrations
-├── storage/           # Uploaded files
+DeepShield-AI-Security-Platform/
+├── backend/
+│   ├── app/
+│   │   ├── ai/          # AI detection modules (pluggable)
+│   │   ├── api/         # REST API routes
+│   │   ├── models/      # Database models
+│   │   ├── schemas/     # Pydantic schemas
+│   │   ├── security/    # JWT auth, password hashing
+│   │   └── services/    # Business logic
+│   ├── requirements.txt
+│   └── run.py
+├── frontend/
+│   ├── src/
+│   │   ├── components/  # Reusable UI components
+│   │   ├── pages/       # 12 page components
+│   │   ├── hooks/       # Auth & toast hooks
+│   │   └── services/    # API client
+│   └── package.json
 ├── docker-compose.yml
-└── .env.example
+└── README.md
 ```
+
+---
 
 ## Tech Stack
 
-### Frontend
-- React 18 with TypeScript
-- Tailwind CSS
-- React Router v6
-- Recharts (charts)
-- Lucide React (icons)
-- Axios (HTTP client)
-
-### Backend
-- Python 3.11+
-- FastAPI
-- SQLAlchemy (async)
-- PostgreSQL (via asyncpg)
-- JWT Authentication (python-jose)
-- Password hashing (bcrypt via passlib)
-
-### Infrastructure
-- Docker & Docker Compose
-- Nginx (frontend serving)
-- PostgreSQL 16
-
----
-
-## Quick Start
-
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL 16+ (or use Docker)
-
-### Option 1: Docker (Recommended)
-
-```bash
-git clone <repository-url>
-cd DeepShield-AI-Security-Platform
-cp .env.example .env
-docker-compose up -d
-```
-
-The application will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
-
-### Option 2: Manual Setup
-
-#### Database
-
-```bash
-# Create PostgreSQL database
-createdb deepshield
-```
-
-#### Backend
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-pip install -r requirements.txt
-cp ../.env.example .env
-python run.py
-```
-
-#### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
----
-
-## Demo Credentials
-
-| Field | Value |
-|-------|-------|
-| Email | demo@deepshield.local |
-| Password | Demo@12345 |
-
-The demo account has admin privileges and comes with simulated analysis data.
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Tailwind CSS, Recharts, Lucide Icons |
+| Backend | Python 3.13+, FastAPI, SQLAlchemy (async), Pydantic v2 |
+| Database | SQLite (demo) / PostgreSQL (production) |
+| Auth | JWT (python-jose), bcrypt password hashing |
+| AI | Modular detector architecture (pluggable) |
+| Infra | Docker Compose, Nginx |
 
 ---
 
 ## API Endpoints
 
-### Authentication
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/auth/register` | Register new user |
 | POST | `/api/auth/login` | Login |
 | GET | `/api/auth/me` | Get current user |
-| PUT | `/api/auth/profile` | Update profile |
-| POST | `/api/auth/change-password` | Change password |
-
-### Analysis
-| Method | Endpoint | Description |
-|--------|----------|-------------|
 | POST | `/api/analyze/upload` | Upload file for analysis |
 | POST | `/api/analyze/{id}/run` | Run analysis |
 | GET | `/api/analyze/{id}` | Get analysis result |
 | GET | `/api/analyze/` | List analyses |
-| GET | `/api/analyze/stats/overview` | Get stats |
-
-### Evidence
-| Method | Endpoint | Description |
-|--------|----------|-------------|
 | GET | `/api/evidence/` | List evidence files |
-| GET | `/api/evidence/{id}` | Get evidence details |
-
-### Reports
-| Method | Endpoint | Description |
-|--------|----------|-------------|
 | GET | `/api/reports/` | List reports |
-| GET | `/api/reports/{id}` | Get report |
-
-### Threat Intelligence
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/threat-intelligence/` | Get threat intel |
-
-### Admin
-| Method | Endpoint | Description |
-|--------|----------|-------------|
+| GET | `/api/threat-intelligence/` | Threat intelligence |
 | GET | `/api/admin/dashboard` | Admin dashboard |
-| GET | `/api/admin/users` | List users |
 
 ---
 
-## AI Model Integration
+## AI Detection Modules
 
-DeepShield uses a modular AI detection architecture. Each detector inherits from `BaseDetector` and can be replaced with real models.
+| Module | Type | Purpose |
+|--------|------|---------|
+| ImageDetector | Demo | Image deepfake detection |
+| VideoDetector | Demo | Video deepfake detection |
+| AudioDetector | Demo | Audio deepfake detection |
+| TextDetector | Demo | AI-generated text detection |
+| MetadataAnalyzer | Rule-based | File metadata analysis |
+| RiskEngine | Aggregator | Risk assessment scoring |
 
-### Current Demo Detectors
-- `ImageDetector` - Demo image deepfake detection
-- `VideoDetector` - Demo video deepfake detection
-- `AudioDetector` - Demo audio deepfake detection
-- `TextDetector` - Demo AI text detection
-- `MetadataAnalyzer` - Rule-based metadata analysis
-- `RiskEngine` - Risk assessment from detector results
+All detectors inherit from `BaseDetector`. Replace with real models for production.
 
-### Integrating Real Models
+---
 
-1. Create your model class inheriting from `BaseDetector`
-2. Implement the `analyze()` method
-3. Register in `app/ai/analyzer.py`
+## Docker Deployment
 
-```python
-from app.ai.base_detector import BaseDetector
-
-class RealImageDetector(BaseDetector):
-    def __init__(self):
-        super().__init__()
-        self.name = "RealImageDetector"
-    
-    async def analyze(self, file_path: str, file_hash: str) -> dict:
-        # Load your model and run inference
-        result = your_model.predict(file_path)
-        return {
-            "ai_probability": result.score,
-            "manipulation_score": result.manipulation,
-            "risk_level": self._determine_risk_level(result.score),
-            "indicators": result.indicators,
-            "confidence": result.confidence,
-        }
+```bash
+docker-compose up -d
 ```
 
----
-
-## Security Considerations
-
-- JWT-based authentication with secure token handling
-- bcrypt password hashing (never store plaintext passwords)
-- File type validation (MIME type + extension)
-- File size limits (100MB default)
-- SHA-256 file integrity hashing
-- CORS configuration
-- Input validation via Pydantic
-- Role-based access control (RBAC)
-- Rate limiting ready
-- SQL injection protection via SQLAlchemy ORM
+| Service | URL |
+|---------|-----|
+| Frontend | http://localhost:3000 |
+| Backend API | http://localhost:8000 |
+| API Docs | http://localhost:8000/docs |
 
 ---
 
@@ -225,70 +148,9 @@ class RealImageDetector(BaseDetector):
 - Always verify results with manual expert review
 - Demo mode uses simulated detection results
 - Threat intelligence data is generated for demonstration purposes only
-- This platform is designed for educational and research purposes
-
----
-
-## Project Structure
-
-```
-deepshield/
-├── frontend/
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   │   ├── ui/          # Base UI (Button, Card, Badge, etc.)
-│   │   │   ├── layout/      # Sidebar, TopNavbar
-│   │   │   └── landing/     # Landing page components
-│   │   ├── pages/           # Page components
-│   │   ├── layouts/         # Layout wrappers
-│   │   ├── hooks/           # Custom React hooks
-│   │   ├── services/        # API client
-│   │   ├── types/           # TypeScript types
-│   │   └── utils/           # Utility functions
-│   ├── package.json
-│   └── vite.config.ts
-│
-├── backend/
-│   ├── app/
-│   │   ├── api/             # API route handlers
-│   │   ├── models/          # SQLAlchemy models
-│   │   ├── schemas/         # Pydantic schemas
-│   │   ├── services/        # Business logic
-│   │   ├── ai/              # AI detection modules
-│   │   ├── security/        # Auth & security
-│   │   └── utils/           # Utilities
-│   ├── requirements.txt
-│   └── run.py
-│
-├── ml/                      # ML model code (future)
-├── database/                # Migrations
-├── storage/                 # File uploads
-├── docker-compose.yml
-└── README.md
-```
-
----
-
-## Future Improvements
-
-- [ ] Real deepfake detection models (FaceForensics++, etc.)
-- [ ] GPU-accelerated inference
-- [ ] WebSocket real-time analysis updates
-- [ ] PDF report export
-- [ ] Email notifications
-- [ ] API rate limiting middleware
-- [ ] Audit logging dashboard
-- [ ] Batch analysis support
-- [ ] Webhook integrations
-- [ ] Multi-language support
-- [ ] Mobile app (React Native)
 
 ---
 
 ## License
 
 MIT License
-
-## Support
-
-For issues and questions, please open a GitHub issue.
