@@ -6,3 +6,6 @@ __pycache__/
 storage/uploads/
 .vite/
 .DS_Store
+*.db
+venv/
+backend/venv/

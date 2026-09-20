@@ -1,13 +1,12 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, DateTime, Float, JSON, Text
-from sqlalchemy.dialects.postgresql import UUID
 from app.database import Base
 
 class ThreatIndicator(Base):
     __tablename__ = "threat_indicators"
     
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     indicator_type = Column(String(50), nullable=False)
     value = Column(String(500), nullable=False)
     severity = Column(String(20), nullable=False)

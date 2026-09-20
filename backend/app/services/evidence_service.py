@@ -3,7 +3,7 @@ from typing import Optional, List
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.models.evidence import Evidence, EvidenceStatus
+from app.models.evidence import Evidence
 
 class EvidenceService:
     @staticmethod
@@ -11,7 +11,7 @@ class EvidenceService:
         evidence = Evidence(
             evidence_id=f"EV-{uuid.uuid4().hex[:12].upper()}",
             user_id=user_id,
-            status=EvidenceStatus.CREATED,
+            status="created",
             chain_of_custody=[{"action": "created", "timestamp": datetime.utcnow().isoformat()}],
             **kwargs
         )

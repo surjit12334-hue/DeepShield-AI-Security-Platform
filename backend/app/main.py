@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from app.config import settings
 from app.database import init_db
 from app.api import auth, analysis, evidence, reports, threat_intelligence, admin, settings as settings_api
-from app.models.user import User, UserRole
+from app.models.user import User
 from app.services.user_service import user_service
 from app.database import async_session
 

@@ -5,8 +5,8 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
-from app.models.analysis import Analysis, AnalysisStatus, RiskLevel, ContentType
-from app.models.evidence import Evidence, EvidenceStatus
+from app.models.analysis import Analysis
+from app.models.evidence import Evidence
 from app.ai.analyzer import analyzer
 from app.config import settings
 
@@ -31,7 +31,7 @@ class AnalysisService:
             content_type=content_type,
             mime_type=mime_type,
             file_hash=file_hash,
-            status=AnalysisStatus.PENDING,
+            status="pending",
             analysis_options=options
         )
         db.add(analysis)
@@ -41,7 +41,7 @@ class AnalysisService:
     
     @staticmethod
     async def run_analysis(db: AsyncSession, analysis: Analysis, file_path: str) -> Analysis:
-        analysis.status = AnalysisStatus.PROCESSING
+        analysis.status = "processing"
         await db.commit()
         
         try:
@@ -54,7 +54,7 @@ class AnalysisService:
             risk = results.get("risk_assessment", {})
             detector = results.get("detector_results", [{}])[0] if results.get("detector_results") else {}
             
-            analysis.status = AnalysisStatus.COMPLETED
+            analysis.status = "completed"
             analysis.risk_level = risk.get("risk_level", "low")
             analysis.confidence_score = risk.get("confidence", 0)
             analysis.ai_detection_score = detector.get("ai_probability", 0)
@@ -73,7 +73,7 @@ class AnalysisService:
                 file_hash=analysis.file_hash,
                 file_size=str(analysis.file_size),
                 mime_type=analysis.mime_type,
-                status=EvidenceStatus.ANALYZED,
+                status="analyzed",
                 chain_of_custody=[
                     {"action": "created", "timestamp": datetime.utcnow().isoformat()},
                     {"action": "uploaded", "timestamp": datetime.utcnow().isoformat()},
@@ -87,7 +87,7 @@ class AnalysisService:
             analysis.evidence_id = evidence.id
             
         except Exception as e:
-            analysis.status = AnalysisStatus.FAILED
+            analysis.status = "failed"
             analysis.pipeline_results = {"error": str(e)}
         
         await db.commit()
