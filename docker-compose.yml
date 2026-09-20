@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: deepshield
+      POSTGRES_PASSWORD: deepshield
+      POSTGRES_DB: deepshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deepshield"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://deepshield:deepshield@db:5432/deepshield
+      SECRET_KEY: ${SECRET_KEY:-change-this-in-production}
+      CORS_ORIGINS: '["http://localhost:3000","http://localhost:5173"]'
+      DEMO_MODE: "true"
+      DEMO_EMAIL: demo@deepshield.local
+      DEMO_PASSWORD: Demo@12345
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - upload_data:/app/storage
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  upload_data:
